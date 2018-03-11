@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Produto</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="product-form">
+			<div class="product-div">
+				<h:inputHidden value="#{mBeanProduct.id}"></h:inputHidden>
+
+				<div class="product-info-full-image">
+					<h:outputText value="#{mBeanProduct.getProductImageHTML()}" escape="false" />
+				</div>
+				<div class="product-info-content">
+					<h4>
+						<h:outputText value="#{mBeanProduct.name}"></h:outputText>
+					</h4>
+					<h5>
+						<h:outputText value="#{mBeanProduct.description}"></h:outputText><br/>
+						<br/>
+						<b>Cor:</b>&#160;<h:outputText value="#{mBeanProduct.getColorName()}"></h:outputText>
+					</h5>
+
+					<h3>
+						Preço: R$
+						<h:outputText value="#{mBeanProduct.price}"></h:outputText>
+					</h3>
+
+					<h:commandLink action="#{mBeanCart.addProduct(mBeanProduct.id)}">
+					Adicionar ao carrinho
+					</h:commandLink>
+				</div>
+				<div style="clear: both"></div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

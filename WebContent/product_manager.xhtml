@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Gerência - Produtos</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="product-form" enctype="multipart/form-data">
+
+			<input type="hidden" jsf:id="id" jsf:value="#{mBeanProduct.id}"/>
+			<label>Nome do produto:</label>
+			<br />
+			<input type="text" jsf:id="name" jsf:value="#{mBeanProduct.name}"/>
+			<br />
+			<label>Descrição:</label>
+			<br />
+			<input type="text" jsf:id="description"
+				jsf:value="#{mBeanProduct.description}" />
+			<br />
+			<label>Valor:</label>
+			<br />
+			<input type="text" jsf:id="price" jsf:value="#{mBeanProduct.price}">
+			<f:convertNumber type="currency" currencyCode="BRL"
+				currencySymbol="R$"></f:convertNumber>
+			</input>
+			<br />
+			<label>Cor:</label>
+			<br />
+			<h:selectOneMenu id="color" value="#{mBeanProduct.idColor}">
+				<f:selectItems value="#{mBeanProduct.colors}" var="color"
+					itemLabel="#{color.name}" itemValue="#{color.id}"></f:selectItems>
+			</h:selectOneMenu>
+			
+			<input type="file" class="form-control" jsf:value="#{mBeanProduct.photoList[0]}" />
+			<input type="file" class="form-control" jsf:value="#{mBeanProduct.photoList[1]}" />
+			<input type="file" class="form-control" jsf:value="#{mBeanProduct.photoList[2]}" />
+
+			<h:commandLink action="#{mBeanProduct.save()}" styleClass="btn btn-success">
+				Salvar
+			</h:commandLink>
+
+			<h:dataTable id="product-list" var="product"
+				value="#{mBeanProduct.products}" styleClass="table table-striped">
+				<h:column>
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{product.id}"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{product.name}"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Descrição</f:facet>
+					<h:outputText value="#{product.description}"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Cor</f:facet>
+					<h:outputText value="#{product.color.name}"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Preço</f:facet>
+					<h:outputText value="#{product.price}"></h:outputText>
+				</h:column>
+				<h:column>
+					<button class="btn btn-info" jsf:action="#{mBeanProduct.load(product)}">
+						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+					</button>
+					<button class="btn btn-danger" jsf:action="#{mBeanProduct.remove(product)}">
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</button>
+				</h:column>
+			</h:dataTable>
+
+		</h:form>
+
+		<script>
+			$("[id='product-form:price']").maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: true});
+		</script>
+
+	</ui:define>
+</ui:composition>
+
+</html>

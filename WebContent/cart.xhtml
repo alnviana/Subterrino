@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Carrinho</ui:define>
+		
+	<ui:define name="content">
+		
+		<h:form id="product-form" enctype="multipart/form-data">
+		
+			<table class="table table-bordered table-hover table-condensed">
+				<tbody>
+					<tr>
+						<th>Produto</th>
+						<th>Cor</th>
+						<th>Preço</th>
+						<th>Quant.</th>
+						<th>Total</th>
+						<th></th>
+					</tr>
+					<ui:repeat var="cartItem" value="#{mBeanCart.cart}">
+						<tr>
+							<td>
+								<h:graphicImage class="checkout-product-image" value="./ServletProductImage?id=#{cartItem.product.id}&amp;image=0"></h:graphicImage>
+								<div class="checkout-center-text checkout-product-name">
+									<h:outputText value="#{cartItem.product.name}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									<h:outputText value="#{cartItem.product.color.name}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									R$ <h:outputText value="#{cartItem.product.price}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									<h:commandLink action="#{mBeanCart.decreaseProduct(cartItem.product.id)}">
+										<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+									</h:commandLink>
+									<h:outputText value="#{cartItem.count}" escape="false" />
+									<h:commandLink action="#{mBeanCart.addProduct(cartItem.product.id)}">
+										<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									</h:commandLink>
+								</div>							
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									R$ <h:outputText value="#{cartItem.getTotal()}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<h:commandLink action="#{mBeanCart.removeProduct(cartItem.product.id)}" styleClass="btn btn-danger">
+									<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+								</h:commandLink>
+							</td>
+						</tr>
+					</ui:repeat>
+				</tbody>
+			</table>
+			<h:commandLink action="#{mBeanPurchase.showPurchase(mBeanCart.cart)}" styleClass="btn btn-success">
+				Comprar
+			</h:commandLink>
+			
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+
+</html>

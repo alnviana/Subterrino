@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Gerência - Cores</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="product-form" enctype="multipart/form-data">
+
+			<input type="hidden" jsf:id="id" jsf:value="#{mBeanColor.id}" />
+			<label>Nome da cor:</label>
+			<br />
+			<input type="text" jsf:id="name" jsf:value="#{mBeanColor.name}" />
+
+			<h:commandLink action="#{mBeanColor.save()}" styleClass="btn btn-success">
+				Salvar
+			</h:commandLink>
+
+			<h:dataTable id="color-list" var="color"
+				value="#{mBeanColor.colors}" styleClass="table table-striped table-condensed table-bordered" style="background-color: lightgray;">
+				<h:column>
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{color.id}"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{color.name}"></h:outputText>
+				</h:column>
+				<h:column>
+					<button class="btn btn-info"
+						jsf:action="#{mBeanColor.load(color)}">Alterar</button>
+					<button class="btn btn-danger"
+						jsf:action="#{mBeanColor.remove(color)}">Deletar</button>
+				</h:column>
+			</h:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

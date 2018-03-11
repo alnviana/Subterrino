@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Finalizar Compra</ui:define>
+		
+	<ui:define name="content">
+		
+		<h:form id="purchase-form">
+		
+			<table class="table table-bordered table-hover table-condensed">
+				<tbody>
+					<tr>
+						<th>Produto</th>
+						<th>Cor</th>
+						<th>Preço</th>
+						<th>Quant.</th>
+						<th>Total</th>
+					</tr>
+					<ui:repeat var="purchaseItem" value="#{mBeanPurchase.purchaseItems}">
+						<tr>
+							<td>
+								<h:graphicImage class="checkout-product-image" value="./ServletProductImage?id=#{purchaseItem.product.id}&amp;image=0"></h:graphicImage>
+								<div class="checkout-center-text checkout-product-name">
+									<h:outputText value="#{purchaseItem.product.name}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									<h:outputText value="#{purchaseItem.product.color.name}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									R$ <h:outputText value="#{purchaseItem.product.price}" escape="false" />
+								</div>
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									<h:outputText value="#{purchaseItem.count}" escape="false" />
+								</div>							
+							</td>
+							<td>
+								<div class="checkout-center-text">
+									R$ <h:outputText value="#{purchaseItem.getTotal()}" escape="false" />
+								</div>
+							</td>
+						</tr>
+					</ui:repeat>
+				</tbody>
+			</table>
+			
+			<center>
+				<H1>
+					Total: R$ <h:outputText value="#{mBeanPurchase.purchaseTotal()}" escape="false" />
+				</H1>
+			</center>
+			
+			<label>Nome do pagador:</label>
+			<br />
+			<input type="text" jsf:id="name" jsf:value="#{mBeanPurchase.name}" required="required"/>
+			<br />
+			<label>Telefone:</label>
+			<br />
+			<input type="text" jsf:id="phone" jsf:value="#{mBeanPurchase.phone}" required="required"/>
+			<br />
+			<br />
+			<label>Endereço:</label>
+			<br />
+			<input type="text" jsf:id="address" jsf:value="#{mBeanPurchase.address}" style="width: 300px" required="required"/>
+			<label>Nº:</label>
+			<input type="number" jsf:id="add_num" jsf:value="#{mBeanPurchase.add_num}" style="width: 50px" required="required"/>
+			<br />
+			<br />
+			<label>Método de Pagamento:</label>
+			<br />
+			<h:selectOneMenu id="paymentTypeID" value="#{mBeanPurchase.paymentTypeID}" required="required">
+				<f:selectItems value="#{mBeanPurchase.paymentTypes}" var="paymentType"
+					itemLabel="#{paymentType.name}" itemValue="#{paymentType.id}"></f:selectItems>
+			</h:selectOneMenu>
+			<br />
+			<br />
+			
+			<h:commandButton value="Finalizar compra" type="submit" action="#{mBeanPurchase.save()}" styleClass="btn btn-success" />
+			
+		</h:form>
+		
+		<script>
+			$(document).ready(function() {
+				$("[id='purchase-form:phone']").inputmask({
+					mask: ["(99) 9999-9999", "(99) 99999-9999", ],
+					keepStatic: true
+				});
+			});
+		</script>        
+		
+	</ui:define>
+</ui:composition>
+
+</html>

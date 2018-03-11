@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Gerência - Cores</ui:define>
+
+	<ui:define name="content">
+		<h:outputText value="#{mBeanPurchase.loadPurchases()}" escape="false" />
+		
+		<h:form id="purchase-form">
+		
+			<ui:repeat var="purchase" value="#{mBeanPurchase.purchases}">
+				<div style="background-color:white;padding:10px;">
+					<b>ID:</b> <h:outputText value="#{purchase.id}" escape="false" /><br/>
+					<b>Nome:</b> <h:outputText value="#{purchase.name}" escape="false" /><br/>
+					<b>Telefone:</b> <h:outputText value="#{purchase.phone}" escape="false" /><br/>
+					<b>Endereço:</b> <h:outputText value="#{purchase.address}" escape="false" /><br/>
+					<b>Número:</b> <h:outputText value="#{purchase.add_num}" escape="false" /><br/>
+					<b>Tipo de Pagamento:</b> <h:outputText value="#{purchase.paymentType.name}" escape="false" /><br/>
+					
+					<table class="table table-bordered table-hover table-condensed">
+						<tbody>
+							<tr>
+								<th>Produto</th>
+								<th>Cor</th>
+								<th>Preço</th>
+								<th>Quant.</th>
+								<th>Total</th>
+							</tr>
+							<ui:repeat var="purchaseItem" value="#{purchase.getPurchaseItems()}">
+								<tr>
+									<td>
+										<h:graphicImage class="checkout-product-image" value="./ServletProductImage?id=#{purchaseItem.product.id}&amp;image=0"></h:graphicImage>
+										<div class="checkout-center-text checkout-product-name">
+											<h:outputText value="#{purchaseItem.product.name}" escape="false" />
+										</div>
+									</td>
+									<td>
+										<div class="checkout-center-text">
+											<h:outputText value="#{purchaseItem.product.color.name}" escape="false" />
+										</div>
+									</td>
+									<td>
+										<div class="checkout-center-text">
+											R$ <h:outputText value="#{purchaseItem.product.price}" escape="false" />
+										</div>
+									</td>
+									<td>
+										<div class="checkout-center-text">
+											<h:outputText value="#{purchaseItem.count}" escape="false" />
+										</div>							
+									</td>
+									<td>
+										<div class="checkout-center-text">
+											R$ <h:outputText value="#{purchaseItem.getTotal()}" escape="false" />
+										</div>
+									</td>
+									<td>
+										<h:commandLink action="#{mBeanPurchase.remove(purchase)}" styleClass="btn btn-danger">
+											Deletar
+										</h:commandLink>
+									</td>
+								</tr>
+							</ui:repeat>
+						</tbody>
+					</table>
+				</div>
+				<br/>
+			</ui:repeat>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">Página Inicial</ui:define>
+
+	<ui:define name="content">
+		<h:form id="product-form">
+			<div class="product-div">
+				<ui:repeat var="product" value="#{mBeanProduct.products}">
+					<div class="product">
+						<div class="text-center">
+							<a href="produto.jsf"> <h:commandLink
+									action="#{mBeanProduct.showProduct(product)}">
+									<h:graphicImage class="product-image"
+										value="./ServletProductImage?id=#{product.id}&amp;image=0"></h:graphicImage>
+									<h:outputText value="#{product.name}"></h:outputText>
+									<br />
+									R$ <h:outputText value="#{product.price}"></h:outputText>
+									<br />
+								</h:commandLink>
+							</a>
+						</div>
+					</div>
+				</ui:repeat>
+				<div style="clear: both"></div>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>
