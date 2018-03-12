@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 
 import com.subterrino.dao.ColorDao;
 import com.subterrino.entity.Color;
+import com.subterrino.service.ColorService;
 
 @ManagedBean(name = "mBeanColor")
 public class MBeanColor {
@@ -23,34 +24,19 @@ public class MBeanColor {
 	}
 
 	public String save() throws IOException {
-		if (id == null || id.equals(0)) {
-			add(name);
-		} else {
-			change(id, name);
+		Color c = new Color();
+		c.setId(id);
+		c.setName(name);
+		
+		try {
+			new ColorService().save(c);
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		
 		loadColors();
 
 		return "";
-	}
-
-	private void add(String name) {
-		Color color = new Color();
-		color.setName(name);
-		
-		new ColorDao().insert(color);
-	}
-
-	private void change(Integer id, String name) {
-		for (Color p : colors) {
-			if (p.getId().equals(id)) {
-				Color color = new Color();
-				color.setId(id);
-				color.setName(name);
-				
-				new ColorDao().update(color);
-			}
-		}
 	}
 
 	public String remove(Color color) {
