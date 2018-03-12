@@ -7,8 +7,9 @@ import javax.persistence.Query;
 
 import com.subterrino.entity.PaymentType;
 
-public class PaymentTypeDao {
+public class PaymentTypeDao implements Dao<PaymentType> {
 	
+	@Override
 	public void insert(PaymentType paymentType) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -17,6 +18,7 @@ public class PaymentTypeDao {
 		em.close();
 	}
 	
+	@Override
 	public void update(PaymentType paymentType) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -25,6 +27,7 @@ public class PaymentTypeDao {
 		em.close();
 	}
 	
+	@Override
 	public void remove(PaymentType paymentType) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -33,6 +36,7 @@ public class PaymentTypeDao {
 		em.close();
 	}
 	
+	@Override
 	public PaymentType search(Integer id) {
 		EntityManager em = Connection.getInstance();
 		PaymentType paymentType = em.find(PaymentType.class, id);
@@ -42,6 +46,7 @@ public class PaymentTypeDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<PaymentType> list() {
 		EntityManager em = Connection.getInstance();
 		Query q = em.createQuery("from PaymentType");

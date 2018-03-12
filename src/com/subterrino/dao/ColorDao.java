@@ -7,8 +7,9 @@ import javax.persistence.Query;
 
 import com.subterrino.entity.Color;
 
-public class ColorDao {
+public class ColorDao implements Dao<Color> {
 	
+	@Override
 	public void insert(Color color) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -17,6 +18,7 @@ public class ColorDao {
 		em.close();
 	}
 	
+	@Override
 	public void update(Color color) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -25,6 +27,7 @@ public class ColorDao {
 		em.close();
 	}
 	
+	@Override
 	public void remove(Color color) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -33,6 +36,7 @@ public class ColorDao {
 		em.close();
 	}
 	
+	@Override
 	public Color search(Integer id) {
 		EntityManager em = Connection.getInstance();
 		Color color = em.find(Color.class, id);
@@ -42,6 +46,7 @@ public class ColorDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Color> list() {
 		EntityManager em = Connection.getInstance();
 		Query q = em.createQuery("from Color");

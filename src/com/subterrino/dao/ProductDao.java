@@ -7,8 +7,9 @@ import javax.persistence.Query;
 
 import com.subterrino.entity.Product;
 
-public class ProductDao {
+public class ProductDao implements Dao<Product> {
 	
+	@Override
 	public void insert(Product product) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -17,6 +18,7 @@ public class ProductDao {
 		em.close();
 	}
 	
+	@Override
 	public void update(Product product) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -25,6 +27,7 @@ public class ProductDao {
 		em.close();
 	}
 	
+	@Override
 	public void remove(Product product) {
 		EntityManager em = Connection.getInstance();
 		em.getTransaction().begin();
@@ -33,6 +36,7 @@ public class ProductDao {
 		em.close();
 	}
 	
+	@Override
 	public Product search(Integer id) {
 		EntityManager em = Connection.getInstance();
 		Product product = em.find(Product.class, id);
@@ -42,6 +46,7 @@ public class ProductDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Product> list() {
 		EntityManager em = Connection.getInstance();
 		Query q = em.createQuery("from Product");
