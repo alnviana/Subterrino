@@ -55,4 +55,13 @@ public class ColorDao implements Dao<Color> {
 		
 		return colors;
 	}
+	
+	public List<Color> search(String name) {
+		EntityManager em = Connection.getInstance();
+		Query q = em.createQuery("From Color Where name like '" + name + "'");
+		List<Color> colors = q.getResultList();
+		em.close();
+		
+		return colors;
+	}
 }
