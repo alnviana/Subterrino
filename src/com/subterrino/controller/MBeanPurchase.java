@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.PaymentTypeDao;
-import com.subterrino.dao.PurchaseDao;
+import com.subterrino.dao.Dao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.PaymentType;
 import com.subterrino.entity.Purchase;
@@ -31,8 +31,8 @@ public class MBeanPurchase {
 	
 	@PostConstruct
 	public void loadPurchases() {
-		purchases = new PurchaseDao().list();
-		paymentTypes = new PaymentTypeDao().list();
+		purchases = FactoryDao.createPurchaseDao().list();
+		paymentTypes = FactoryDao.createPaymentTypeDao().list();
 	}
 	
 	public String showPurchase(ArrayList<CartItem> cart) {		
@@ -70,7 +70,7 @@ public class MBeanPurchase {
 		purchase.setAdd_num(add_num);
 		purchase.setPhone(phone);
 		
-		PaymentTypeDao ptd = new PaymentTypeDao();
+		Dao<PaymentType> ptd = FactoryDao.createPaymentTypeDao();
 		PaymentType pt = ptd.search(paymentTypeID);
 		purchase.setPaymentType(pt);
 		
@@ -79,7 +79,7 @@ public class MBeanPurchase {
 		}
 		
 		purchase.setPurchaseItems(purchaseItems);		
-		new PurchaseDao().insert(purchase);
+		FactoryDao.createPurchaseDao().insert(purchase);
 		
 		name = null;
 		address = null;
@@ -94,7 +94,7 @@ public class MBeanPurchase {
 	}
 	
 	public String remove(Purchase purchase) {
-		new PurchaseDao().remove(purchase);
+		FactoryDao.createPurchaseDao().remove(purchase);
 		
 		loadPurchases();
 		return "";

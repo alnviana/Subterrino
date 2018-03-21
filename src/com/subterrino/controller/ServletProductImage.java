@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.subterrino.dao.ProductDao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Product;
 
 @WebServlet("/ServletProductImage")
@@ -25,7 +25,7 @@ public class ServletProductImage extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
 		Integer image = Integer.parseInt(req.getParameter("image"));
-    	Product p = new ProductDao().search(new Integer(id));
+    	Product p = FactoryDao.createProductDao().search(new Integer(id));
     	
     	ArrayList<String> photoList = p.getPhotoList();
     	if (image >= 0 && image <= photoList.size()-1) {

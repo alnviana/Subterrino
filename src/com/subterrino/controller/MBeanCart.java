@@ -6,7 +6,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.ProductDao;
+import com.subterrino.dao.Dao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.Product;
 
@@ -27,7 +28,7 @@ public class MBeanCart {
 		}
 		
 		if (index == -1) {
-			ProductDao productDao = new ProductDao();
+			Dao<Product> productDao = FactoryDao.createProductDao();
 			Product product = productDao.search(id);
 			
 			CartItem ci = new CartItem();

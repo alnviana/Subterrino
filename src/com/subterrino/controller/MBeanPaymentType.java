@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
-import com.subterrino.dao.PaymentTypeDao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.PaymentType;
 
 @ManagedBean(name = "mBeanPaymentType")
@@ -19,7 +19,7 @@ public class MBeanPaymentType {
 	
 	@PostConstruct
 	public void loadPaymentTypes() {
-		paymentTypes = new PaymentTypeDao().list();
+		paymentTypes = FactoryDao.createPaymentTypeDao().list();
 	}
 
 	public String save() throws IOException {
@@ -38,7 +38,7 @@ public class MBeanPaymentType {
 		PaymentType paymentType = new PaymentType();
 		paymentType.setName(name);
 		
-		new PaymentTypeDao().insert(paymentType);
+		FactoryDao.createPaymentTypeDao().insert(paymentType);
 	}
 
 	private void change(Integer id, String name) {
@@ -48,13 +48,13 @@ public class MBeanPaymentType {
 				paymentType.setId(id);
 				paymentType.setName(name);
 				
-				new PaymentTypeDao().update(paymentType);
+				FactoryDao.createPaymentTypeDao().update(paymentType);
 			}
 		}
 	}
 
 	public String remove(PaymentType paymentType) {
-		new PaymentTypeDao().remove(paymentType);
+		FactoryDao.createPaymentTypeDao().remove(paymentType);
 		
 		loadPaymentTypes();
 		return "";
