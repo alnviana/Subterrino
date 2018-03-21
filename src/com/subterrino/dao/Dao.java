@@ -51,6 +51,17 @@ public abstract class Dao<T> {
 		return t;
 	}
 	
+	/*
+	 * public List<Color> search(String name) {
+		EntityManager em = Connection.getInstance();
+		Query q = em.createQuery("From Color Where name like '" + name + "'");
+		List<Color> colors = q.getResultList();
+		em.close();
+		
+		return colors;
+	}
+	 */
+	
 	//Necessário tornar os métodos daqui genérico
 	//Remover instanciamento direto sem Factory da classe ColorService
 	//Corrigir MBeans

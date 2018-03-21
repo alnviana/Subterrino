@@ -8,19 +8,19 @@ import com.subterrino.entity.Purchase;
 public class FactoryDao {
 	
 	public static Dao<Color> createColorDao() {
-		return new ColorDao();
+		return new GenericDao<Color>();
 	}
 	
 	public static Dao<PaymentType> createPaymentTypeDao() {
-		return new PaymentTypeDao();
+		return new GenericDao<PaymentType>();
 	}
 	
 	public static Dao<Product> createProductDao() {
-		return new ProductDao();
+		return new GenericDao<Product>();
 	}
 	
 	public static Dao<Purchase> createPurchaseDao() {
-		return new PurchaseDao();
+		return new GenericDao<Purchase>();
 	}
 	
 }
