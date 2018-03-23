@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.PaymentTypeDao;
-import com.subterrino.dao.PurchaseDao;
+import com.subterrino.dao.Dao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.PaymentType;
 import com.subterrino.entity.Purchase;
@@ -31,8 +31,8 @@ public class MBeanPurchase {
 	
 	@PostConstruct
 	public void loadPurchases() {
-		purchases = new PurchaseDao().list();
-		paymentTypes = new PaymentTypeDao().list();
+		purchases = FactoryDao.createPurchaseDao().list(Purchase.class);
+		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
 	}
 	
 	public String showPurchase(ArrayList<CartItem> cart) {		
@@ -45,9 +45,8 @@ public class MBeanPurchase {
 				pi.setCount(cartItem.getCount());
 				
 				purchaseItems.add(pi);
-			}
+			}			
 			
-			MBeanCart.ClearCart();
 			return "purchase.jsf";
 		}else {
 			return "index.jsf";
@@ -70,8 +69,8 @@ public class MBeanPurchase {
 		purchase.setAdd_num(add_num);
 		purchase.setPhone(phone);
 		
-		PaymentTypeDao ptd = new PaymentTypeDao();
-		PaymentType pt = ptd.search(paymentTypeID);
+		Dao<PaymentType> ptd = FactoryDao.createPaymentTypeDao();
+		PaymentType pt = ptd.search(PaymentType.class, paymentTypeID);
 		purchase.setPaymentType(pt);
 		
 		for (PurchaseItem pi : purchaseItems) {
@@ -79,7 +78,7 @@ public class MBeanPurchase {
 		}
 		
 		purchase.setPurchaseItems(purchaseItems);		
-		new PurchaseDao().insert(purchase);
+		FactoryDao.createPurchaseDao().insert(purchase);
 		
 		name = null;
 		address = null;
@@ -88,13 +87,14 @@ public class MBeanPurchase {
 		paymentTypeID = 0;
 		purchaseItems = new ArrayList<PurchaseItem>();
 		
+		MBeanCart.ClearCart();
 		loadPurchases();
 
-		return "index.jsf";
+		return "purchase_manager.jsf";
 	}
 	
 	public String remove(Purchase purchase) {
-		new PurchaseDao().remove(purchase);
+		FactoryDao.createPurchaseDao().remove(purchase);
 		
 		loadPurchases();
 		return "";

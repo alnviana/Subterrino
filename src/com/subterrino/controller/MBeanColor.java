@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
-import com.subterrino.dao.ColorDao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 import com.subterrino.service.ColorService;
 
@@ -20,7 +20,7 @@ public class MBeanColor {
 	
 	@PostConstruct
 	public void loadColors() {
-		colors = new ColorDao().list();
+		colors = FactoryDao.createColorDao().list(Color.class);
 	}
 
 	public String save() throws IOException {
@@ -31,7 +31,7 @@ public class MBeanColor {
 		try {
 			new ColorService().save(c);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		loadColors();
@@ -40,7 +40,7 @@ public class MBeanColor {
 	}
 
 	public String remove(Color color) {
-		new ColorDao().remove(color);
+		FactoryDao.createColorDao().remove(color);
 		
 		loadColors();
 		return "";

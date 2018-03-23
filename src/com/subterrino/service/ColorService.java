@@ -1,6 +1,7 @@
 package com.subterrino.service;
 
 import com.subterrino.dao.ColorDao;
+import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 
 public class ColorService {
@@ -14,20 +15,21 @@ public class ColorService {
 			throw new ServiceException("O nome não pode ser maior que 20 caracteres.");
 		}
 		
-		if (! new ColorDao().search(color.getName()).isEmpty()) {
+		if (! FactoryDao.createColorDao().search(Color.class, "name", color.getName()).isEmpty()) {
 			throw new ServiceException("Nome já cadastrado.");
 		}
 		
 		try {
 			if (color.getId() == null || color.getId().equals(0)) {
-				new ColorDao().insert(color);
+				color.setId(null);
+				FactoryDao.createColorDao().insert(color);
 			} else {
-				Color c = new ColorDao().search(color.getId());
+				Color c = new ColorDao().search(Color.class, color.getId());
 				
 				if (c == null) {
 					throw new ServiceException("ID inexistente.");
 				} else {
-					new ColorDao().update(color);
+					FactoryDao.createColorDao().update(color);
 				}
 			}
 		} catch (ServiceException e) {
