@@ -2,7 +2,7 @@
 
     1.1 - Definir um nome.
     1.2 - Criar uma descrição
-2 - Descrever o objetivo Geral do sistema.
+2 - Descrever o objetivo Geral do sistema
 
 3 - Criar a lista de requisitos funcionais (7) e não-funcionais(5).
 
@@ -22,16 +22,12 @@
 
 11 - Criar 3 serviços REST.
 
+---
 
+* Criar service para todos os MBeans
 
+* Fazer os testes Alterar, Consultar e Deletar para o TestColor.
 
+* Replicar os testes para os outros Dao.
 
-
-
-Criar service para todos os MBeans
-
-Fazer os testes Alterar, Consultar e Deletar para o TestColor.
-
-Replicar os testes para os outros Dao.
-
-Criar RESTs para a interface.
+* Criar RESTs para a interface.
