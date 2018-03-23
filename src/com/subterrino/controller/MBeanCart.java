@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import com.subterrino.dao.Dao;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
+import com.subterrino.entity.Color;
 import com.subterrino.entity.Product;
 
 @SessionScoped
@@ -29,7 +30,7 @@ public class MBeanCart {
 		
 		if (index == -1) {
 			Dao<Product> productDao = FactoryDao.createProductDao();
-			Product product = productDao.search(id);
+			Product product = productDao.search(Product.class, id);
 			
 			CartItem ci = new CartItem();
 			ci.setProduct(product);

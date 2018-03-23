@@ -17,6 +17,7 @@ import org.apache.catalina.core.ApplicationPart;
 import com.subterrino.dao.Dao;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
+import com.subterrino.entity.PaymentType;
 import com.subterrino.entity.Product;
 
 @ManagedBean(name = "mBeanProduct")
@@ -44,8 +45,8 @@ public class MBeanProduct {
 	
 	@PostConstruct
 	public void loadProducts() {
-		products = FactoryDao.createProductDao().list();
-		colors = FactoryDao.createColorDao().list();
+		products = FactoryDao.createProductDao().list(Product.class);
+		colors = FactoryDao.createColorDao().list(Color.class);
 	}
 
 	public String save() throws IOException {
@@ -81,7 +82,7 @@ public class MBeanProduct {
 
 	private void add(String name, String description, Double price, Integer idColor, ArrayList<String> photo_path) {
 		Dao<Color> colorDao = FactoryDao.createColorDao();
-		Color color = colorDao.search(idColor);
+		Color color = colorDao.search(Color.class, idColor);
 		
 		
 		Product product = new Product();
@@ -104,10 +105,10 @@ public class MBeanProduct {
 				product.setPrice(price);
 				
 				Dao<Color> colorDao = FactoryDao.createColorDao();
-				Color color = colorDao.search(idColor);
+				Color color = colorDao.search(Color.class, idColor);
 				product.setColor(color);
 				
-				Product op = FactoryDao.createProductDao().search(new Integer(id));
+				Product op = FactoryDao.createProductDao().search(Product.class, new Integer(id));
 				ArrayList<String> old_photoList = op.getPhotoList();
 				for(int i = 0; i < photo_path.size(); i++) {
 					if (!photo_path.get(i).isEmpty()) {
@@ -155,7 +156,7 @@ public class MBeanProduct {
 			html += "	window.location.replace(\"/"+base_url+"/index.jsf\");";
 			html += "</script>";
 		} else {
-			Product op = FactoryDao.createProductDao().search(new Integer(id));
+			Product op = FactoryDao.createProductDao().search(Product.class, new Integer(id));
 			ArrayList<String> old_photoList = op.getPhotoList();
 			Integer index = 0;
 			
@@ -184,7 +185,7 @@ public class MBeanProduct {
 	}
 	
 	public String getColorName() {		
-		return FactoryDao.createColorDao().search(idColor).getName();
+		return FactoryDao.createColorDao().search(Color.class, idColor).getName();
 	}
 
 	public Integer getId() {

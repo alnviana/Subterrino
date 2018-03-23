@@ -20,7 +20,7 @@ public class MBeanColor {
 	
 	@PostConstruct
 	public void loadColors() {
-		colors = FactoryDao.createColorDao().list();
+		colors = FactoryDao.createColorDao().list(Color.class);
 	}
 
 	public String save() throws IOException {
@@ -31,7 +31,7 @@ public class MBeanColor {
 		try {
 			new ColorService().save(c);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 		loadColors();

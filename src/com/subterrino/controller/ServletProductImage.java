@@ -25,7 +25,7 @@ public class ServletProductImage extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
 		Integer image = Integer.parseInt(req.getParameter("image"));
-    	Product p = FactoryDao.createProductDao().search(new Integer(id));
+    	Product p = FactoryDao.createProductDao().search(Product.class, new Integer(id));
     	
     	ArrayList<String> photoList = p.getPhotoList();
     	if (image >= 0 && image <= photoList.size()-1) {

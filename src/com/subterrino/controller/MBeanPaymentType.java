@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
 import com.subterrino.dao.FactoryDao;
+import com.subterrino.entity.Color;
 import com.subterrino.entity.PaymentType;
 
 @ManagedBean(name = "mBeanPaymentType")
@@ -19,7 +20,7 @@ public class MBeanPaymentType {
 	
 	@PostConstruct
 	public void loadPaymentTypes() {
-		paymentTypes = FactoryDao.createPaymentTypeDao().list();
+		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
 	}
 
 	public String save() throws IOException {

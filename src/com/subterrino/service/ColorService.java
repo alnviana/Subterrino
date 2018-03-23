@@ -15,12 +15,13 @@ public class ColorService {
 			throw new ServiceException("O nome não pode ser maior que 20 caracteres.");
 		}
 		
-		if (! new ColorDao().search(color.getName()).isEmpty()) {
+		if (! FactoryDao.createColorDao().search(Color.class, "name", color.getName()).isEmpty()) {
 			throw new ServiceException("Nome já cadastrado.");
 		}
 		
 		try {
 			if (color.getId() == null || color.getId().equals(0)) {
+				color.setId(null);
 				FactoryDao.createColorDao().insert(color);
 			} else {
 				Color c = new ColorDao().search(Color.class, color.getId());

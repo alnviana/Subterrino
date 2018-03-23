@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import com.subterrino.entity.Color;
 
@@ -41,6 +44,18 @@ public abstract class Dao<T> {
 		return t;
 	}
 	
+	public List<T> search(Class<T> c, String propertyName, Object value) {
+		EntityManager em = Connection.getInstance();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<T> cq = cb.createQuery(c);
+		Root<T> root = cq.from(c);
+		cq.where(cb.equal(root.get(propertyName), value));		
+		List<T> t = em.createQuery(cq).getResultList();
+		em.close();
+		
+		return t;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<T> list(Class<T> c) {
 		EntityManager em = Connection.getInstance();
@@ -51,18 +66,4 @@ public abstract class Dao<T> {
 		return t;
 	}
 	
-	/*
-	 * public List<Color> search(String name) {
-		EntityManager em = Connection.getInstance();
-		Query q = em.createQuery("From Color Where name like '" + name + "'");
-		List<Color> colors = q.getResultList();
-		em.close();
-		
-		return colors;
-	}
-	 */
-	
-	//Necessário tornar os métodos daqui genérico
-	//Remover instanciamento direto sem Factory da classe ColorService
-	//Corrigir MBeans
 }

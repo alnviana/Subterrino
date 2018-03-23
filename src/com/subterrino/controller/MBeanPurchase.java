@@ -31,8 +31,8 @@ public class MBeanPurchase {
 	
 	@PostConstruct
 	public void loadPurchases() {
-		purchases = FactoryDao.createPurchaseDao().list();
-		paymentTypes = FactoryDao.createPaymentTypeDao().list();
+		purchases = FactoryDao.createPurchaseDao().list(Purchase.class);
+		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
 	}
 	
 	public String showPurchase(ArrayList<CartItem> cart) {		
@@ -45,9 +45,8 @@ public class MBeanPurchase {
 				pi.setCount(cartItem.getCount());
 				
 				purchaseItems.add(pi);
-			}
+			}			
 			
-			MBeanCart.ClearCart();
 			return "purchase.jsf";
 		}else {
 			return "index.jsf";
@@ -71,7 +70,7 @@ public class MBeanPurchase {
 		purchase.setPhone(phone);
 		
 		Dao<PaymentType> ptd = FactoryDao.createPaymentTypeDao();
-		PaymentType pt = ptd.search(paymentTypeID);
+		PaymentType pt = ptd.search(PaymentType.class, paymentTypeID);
 		purchase.setPaymentType(pt);
 		
 		for (PurchaseItem pi : purchaseItems) {
@@ -88,9 +87,10 @@ public class MBeanPurchase {
 		paymentTypeID = 0;
 		purchaseItems = new ArrayList<PurchaseItem>();
 		
+		MBeanCart.ClearCart();
 		loadPurchases();
 
-		return "index.jsf";
+		return "purchase_manager.jsf";
 	}
 	
 	public String remove(Purchase purchase) {
