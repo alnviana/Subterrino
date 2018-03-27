@@ -8,8 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.subterrino.entity.Color;
-
 public abstract class Dao<T> {
 	
 	public void insert(T t) {

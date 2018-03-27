@@ -1,6 +1,5 @@
 package com.subterrino.service;
 
-import com.subterrino.dao.ColorDao;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 
@@ -24,7 +23,7 @@ public class ColorService {
 				color.setId(null);
 				FactoryDao.createColorDao().insert(color);
 			} else {
-				Color c = new ColorDao().search(Color.class, color.getId());
+				Color c = FactoryDao.createColorDao().search(Color.class, color.getId());
 				
 				if (c == null) {
 					throw new ServiceException("ID inexistente.");

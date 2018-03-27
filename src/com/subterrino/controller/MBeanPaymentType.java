@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
 import com.subterrino.dao.FactoryDao;
-import com.subterrino.entity.Color;
 import com.subterrino.entity.PaymentType;
 
 @ManagedBean(name = "mBeanPaymentType")

@@ -9,7 +9,6 @@ import javax.faces.bean.SessionScoped;
 import com.subterrino.dao.Dao;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
-import com.subterrino.entity.Color;
 import com.subterrino.entity.Product;
 
 @SessionScoped
