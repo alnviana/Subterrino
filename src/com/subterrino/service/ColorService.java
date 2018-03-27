@@ -1,5 +1,7 @@
 package com.subterrino.service;
 
+import java.util.List;
+
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 
@@ -36,4 +38,11 @@ public class ColorService {
 		}		
 	}
 	
+	public void remove(Color color) throws ServiceException {		
+		FactoryDao.createColorDao().remove(color);	
+	}
+	
+	public List<Color> list() throws ServiceException {
+		return FactoryDao.createColorDao().list(Color.class);
+	}
 }
