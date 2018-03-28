@@ -31,3 +31,5 @@
 * Replicar os testes para os outros Dao.
 
 * Criar RESTs para a interface.
+
+* Suprimir aviso do restGET
