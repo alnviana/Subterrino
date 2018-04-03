@@ -32,4 +32,4 @@
 
 * Criar RESTs para a interface.
 
-* Suprimir aviso do restGET
+* Suprimir aviso do restGET			[FEITO]
