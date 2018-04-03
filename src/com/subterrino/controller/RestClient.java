@@ -46,4 +46,8 @@ public class RestClient<T> {
 		
 		return null;
 	}
+	
+	public void restPOST(String restUrl, List<T> objectList) {
+		//https://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection
+	}
 }
