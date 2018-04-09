@@ -20,7 +20,7 @@ public class MBeanColor {
 	@PostConstruct
 	public void loadColors() {
 		try {
-			colors = new ColorService().list();
+			colors = new RestClient<Color>().restGET("http://localhost:8080/Subterrino/rest/Color");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
