@@ -30,6 +30,8 @@
 
 * Replicar os testes para os outros Dao.
 
+* Criar Facade
+
 * Criar RESTs para a interface.
 
 * Suprimir aviso do restGET			[FEITO]
