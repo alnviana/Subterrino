@@ -1,82 +1,108 @@
 package com.subterrino.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.Dao;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.Product;
+import com.subterrino.service.CartService;
+import com.subterrino.service.ServiceException;
 
 @SessionScoped
 @ManagedBean(name = "mBeanCart")
 public class MBeanCart {
-
-	private static List<CartItem> cart = new ArrayList<CartItem>();
 	
 	public String addProduct(Integer id) {
-		Integer index = -1;
+		CartService cs = new CartService();
+		CartItem ct = new CartItem();
 		
-		for (int i = 0; i < cart.size(); i++) {
-			if (cart.get(i).getProduct().getId() == id) {
-				index = i;
-				break;
+		try {
+			try {
+				ct = cs.search(id);
+				ct.setCount(ct.getCount() + 1);
+			} catch (Exception e) {
+				Product p = FactoryDao.createProductDao().search(Product.class, id);
+				
+				if (p == null) {
+					throw new ServiceException("Produto não encontrado.");
+				}
+				
+				ct.setId(id);
+				ct.setProduct(p);
+				ct.setCount(1);
 			}
-		}
-		
-		if (index == -1) {
-			Dao<Product> productDao = FactoryDao.createProductDao();
-			Product product = productDao.search(Product.class, id);
 			
-			CartItem ci = new CartItem();
-			ci.setProduct(product);
-			ci.setCount(1);
-			
-			cart.add(ci);
-		} else {
-			CartItem ci = cart.get(index);
-			ci.setCount(ci.getCount()+1);
-		}
+			try {				
+				new CartService().save(ct);
+			} catch (Exception e) {
+				throw e;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		
 		return "cart.jsf";
 	}
 	
 	public String removeProduct(Integer id) {
-		for (int i = 0; i < cart.size(); i++) {
-			if (cart.get(i).getProduct().getId() == id) {
-				cart.remove(i);
-				break;
-			}
+		try {
+			CartItem ct = new CartItem();
+			ct.setId(id);
+			ct.setCount(0);
+			
+			new CartService().remove(ct);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return "";
 	}
 	
 	public String decreaseProduct(Integer id) {
-		for (int i = 0; i < cart.size(); i++) {
-			if (cart.get(i).getProduct().getId() == id) {
-				Integer count = cart.get(i).getCount()-1;
-				if (count < 1) {count = 1;}
-				cart.get(i).setCount(count);
-				break;
+		CartService cs = new CartService();
+		CartItem ct = new CartItem();
+		
+		try {
+			try {
+				ct = cs.search(id);
+				ct.setCount(ct.getCount() - 1);
+			} catch (Exception e) {
+				Product p = FactoryDao.createProductDao().search(Product.class, id);
+				
+				if (p == null) {
+					throw new ServiceException("Produto não encontrado.");
+				}
+				
+				ct.setProduct(p);
+				ct.setCount(1);
 			}
-		}
+			
+			try {				
+				new CartService().save(ct);
+			} catch (Exception e) {
+				throw e;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		
 		return "";
 	}
 	
 	public static void ClearCart() {
-		MBeanCart.setCart(new ArrayList<CartItem>());
+		CartService.ClearCart();
 	}
 
 	public List<CartItem> getCart() {
-		return cart;
-	}
-
-	public static void setCart(List<CartItem> cart) {
-		MBeanCart.cart = cart;
+		try {
+			return new CartService().list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;	
 	}
 }
