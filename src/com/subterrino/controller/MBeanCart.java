@@ -16,13 +16,23 @@ import com.subterrino.service.ServiceException;
 public class MBeanCart {
 	
 	public String addProduct(Integer id) {
+		changeCartItemCount(id, 1);	
+		return "cart.jsf";
+	}
+	
+	public String decreaseProduct(Integer id) {
+		changeCartItemCount(id, -1);		
+		return "";
+	}
+	
+	private void changeCartItemCount(Integer id, Integer diff) {
 		CartService cs = new CartService();
 		CartItem ct;
 		
 		try {
 			try {
 				ct = cs.search(id);
-				ct.setCount(ct.getCount() + 1);
+				ct.setCount(ct.getCount() + diff);
 			} catch (Exception e) {
 				Product p = FactoryDao.createProductDao().search(Product.class, id);
 				
@@ -41,9 +51,7 @@ public class MBeanCart {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		
-		return "cart.jsf";
+		}
 	}
 	
 	public String removeProduct(Integer id) {
@@ -61,37 +69,6 @@ public class MBeanCart {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return "";
-	}
-	
-	public String decreaseProduct(Integer id) {
-		CartService cs = new CartService();
-		CartItem ct;
-		
-		try {
-			try {
-				ct = cs.search(id);
-				ct.setCount(ct.getCount() - 1);
-			} catch (Exception e) {
-				Product p = FactoryDao.createProductDao().search(Product.class, id);
-				
-				if (p == null) {
-					throw new ServiceException("Produto não encontrado.");
-				}
-				
-				ct = new CartItem(p);
-				ct.setCount(1);
-			}
-			
-			try {				
-				new CartService().save(ct);
-			} catch (Exception e) {
-				throw e;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
 		
 		return "";
 	}
