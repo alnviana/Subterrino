@@ -2,16 +2,11 @@ package com.subterrino.entity;
 
 public class CartItem {
 	
-	private Integer id;
 	private Product product;
 	private Integer count;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
+	
+	public CartItem(Product product) {
+		setProduct(product);
 	}
 
 	public Product getProduct() {

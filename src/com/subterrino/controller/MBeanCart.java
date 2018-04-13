@@ -17,7 +17,7 @@ public class MBeanCart {
 	
 	public String addProduct(Integer id) {
 		CartService cs = new CartService();
-		CartItem ct = new CartItem();
+		CartItem ct;
 		
 		try {
 			try {
@@ -30,8 +30,7 @@ public class MBeanCart {
 					throw new ServiceException("Produto não encontrado.");
 				}
 				
-				ct.setId(id);
-				ct.setProduct(p);
+				ct = new CartItem(p);
 				ct.setCount(1);
 			}
 			
@@ -49,8 +48,13 @@ public class MBeanCart {
 	
 	public String removeProduct(Integer id) {
 		try {
-			CartItem ct = new CartItem();
-			ct.setId(id);
+			Product p = FactoryDao.createProductDao().search(Product.class, id);
+			
+			if (p == null) {
+				throw new ServiceException("Produto não encontrado.");
+			}
+			
+			CartItem ct = new CartItem(p);
 			ct.setCount(0);
 			
 			new CartService().remove(ct);
@@ -63,7 +67,7 @@ public class MBeanCart {
 	
 	public String decreaseProduct(Integer id) {
 		CartService cs = new CartService();
-		CartItem ct = new CartItem();
+		CartItem ct;
 		
 		try {
 			try {
@@ -76,7 +80,7 @@ public class MBeanCart {
 					throw new ServiceException("Produto não encontrado.");
 				}
 				
-				ct.setProduct(p);
+				ct = new CartItem(p);
 				ct.setCount(1);
 			}
 			

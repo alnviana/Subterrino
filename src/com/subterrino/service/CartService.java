@@ -14,7 +14,7 @@ public class CartService implements GenericService<CartItem>{
 		Integer index = -1;
 		
 		for (int i = 0; i < cart.size(); i++) {
-			if (cart.get(i).getProduct().getId() == ct.getId()) {
+			if (cart.get(i).getProduct().getId() == ct.getProduct().getId()) {
 				index = i;
 				break;
 			}
@@ -30,7 +30,7 @@ public class CartService implements GenericService<CartItem>{
 	@Override
 	public void remove(CartItem ct) throws ServiceException {
 		for (int i = 0; i < cart.size(); i++) {
-			if (cart.get(i).getProduct().getId() == ct.getId()) {
+			if (cart.get(i).getProduct().getId() == ct.getProduct().getId()) {
 				cart.remove(i);
 				break;
 			}
