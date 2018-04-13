@@ -13,6 +13,10 @@ public class CartService implements GenericService<CartItem>{
 	public void save(CartItem ct) throws ServiceException {
 		Integer index = -1;
 		
+		if (ct.getCount() < 1) {
+			throw new ServiceException("Quantidade menor que 1 não permitida.");
+		}
+		
 		for (int i = 0; i < cart.size(); i++) {
 			if (cart.get(i).getProduct().getId() == ct.getProduct().getId()) {
 				index = i;

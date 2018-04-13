@@ -30,9 +30,12 @@ public class MBeanCart {
 		CartItem ct;
 		
 		try {
-			try {
-				ct = cs.search(id);
-				ct.setCount(ct.getCount() + diff);
+			try {				
+				CartItem ct2 = cs.search(id);				
+				ct2 = cs.search(id);
+				
+				ct = new CartItem(ct2.getProduct());
+				ct.setCount(ct2.getCount() + diff);
 			} catch (Exception e) {
 				Product p = FactoryDao.createProductDao().search(Product.class, id);
 				
@@ -44,7 +47,8 @@ public class MBeanCart {
 				ct.setCount(1);
 			}
 			
-			try {				
+			try {
+				
 				new CartService().save(ct);
 			} catch (Exception e) {
 				throw e;
