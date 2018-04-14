@@ -7,8 +7,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.PaymentType;
+import com.subterrino.service.PaymentTypeService;
 
 @ManagedBean(name = "mBeanPaymentType")
 public class MBeanPaymentType {
@@ -19,14 +19,22 @@ public class MBeanPaymentType {
 	
 	@PostConstruct
 	public void loadPaymentTypes() {
-		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
+		try {
+			paymentTypes = new PaymentTypeService().list();
+		} catch (Exception e) {
+			System.err.println("Não foi possível carregar a lista de tipos de pagamentos.");
+		}
 	}
 
 	public String save() throws IOException {
-		if (id == null || id.equals(0)) {
-			add(name);
-		} else {
-			change(id, name);
+		PaymentType pt = new PaymentType();
+		pt.setId(id);
+		pt.setName(name);
+		
+		try {
+			new PaymentTypeService().save(pt);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		loadPaymentTypes();
@@ -34,27 +42,12 @@ public class MBeanPaymentType {
 		return "";
 	}
 
-	private void add(String name) {
-		PaymentType paymentType = new PaymentType();
-		paymentType.setName(name);
-		
-		FactoryDao.createPaymentTypeDao().insert(paymentType);
-	}
-
-	private void change(Integer id, String name) {
-		for (PaymentType p : paymentTypes) {
-			if (p.getId().equals(id)) {
-				PaymentType paymentType = new PaymentType();
-				paymentType.setId(id);
-				paymentType.setName(name);
-				
-				FactoryDao.createPaymentTypeDao().update(paymentType);
-			}
-		}
-	}
-
 	public String remove(PaymentType paymentType) {
-		FactoryDao.createPaymentTypeDao().remove(paymentType);
+		try {
+			new PaymentTypeService().remove(paymentType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		loadPaymentTypes();
 		return "";

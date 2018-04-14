@@ -1,11 +1,7 @@
 package com.subterrino.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -14,10 +10,11 @@ import javax.faces.context.FacesContext;
 
 import org.apache.catalina.core.ApplicationPart;
 
-import com.subterrino.dao.Dao;
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 import com.subterrino.entity.Product;
+import com.subterrino.service.ColorService;
+import com.subterrino.service.ProductService;
+import com.subterrino.service.ServiceException;
 
 @ManagedBean(name = "mBeanProduct")
 public class MBeanProduct {
@@ -33,96 +30,56 @@ public class MBeanProduct {
 	
 	private ApplicationPart[] photoList = new ApplicationPart[9];
 
-	public void saveT() {
-		add("Xiaomi Mi Mix Phone com 6 GB de RAM, ROM de 256 GB, Dual SIM - Preto",
-				"6.4 \\\\\\\", Google Android 6.0.1 (Marshmallow), Quad-Core, Qualcomm snapdragon 821 MSM8996AC",
-				1791.00, 1, new ArrayList<String>(Collections.nCopies(10, "")));
-		add("Xiaomi Mi 6 4G", "Snapdragon 835, Splash Resistant, Dual, 12MP, Rear Cameras", 1404.60, 2, new ArrayList<String>(Collections.nCopies(10, "")));
-		
-		loadProducts();
-	}
-	
 	@PostConstruct
 	public void loadProducts() {
-		products = FactoryDao.createProductDao().list(Product.class);
-		colors = FactoryDao.createColorDao().list(Color.class);
+		try {
+			products = new ProductService().list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			colors = new ColorService().list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String save() throws IOException {
 		ArrayList<String> photo_path = new ArrayList<String>();
-		
-		for(ApplicationPart photo : photoList) {
-			if (photo != null && photo.getSize() > 0) {
-				byte[] bytes = new byte[(int) photo.getSize()];
-				photo.getInputStream().read(bytes);
-				
-				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-				photo_path.add("C:/temp/images/" + timestamp.getTime() + "-" + photo.getSubmittedFileName());
-				File f = new File(photo_path.get(photo_path.size()-1));
-				
-				FileOutputStream fo = new FileOutputStream(f);
-				fo.write(bytes);
-				fo.close();
-			}else {
-				photo_path.add("");
-			}
+		try {
+			photo_path = ProductService.SavePhotoList(photoList);
+		} catch (ServiceException e) {
+			e.printStackTrace();
 		}
-
-		if (id == null || id.equals(0)) {
-			add(name, description, price, idColor, photo_path);
-		} else {
-			change(id, name, description, price, idColor, photo_path);
-		}
+				
+		try {
+			Product product = new Product();
+			product.setId(id);
+			product.setName(name);
+			product.setDescription(description);
+			product.setPrice(price);		
+			product.setPhotoList(photo_path);
+			
+			Color color = new ColorService().search(idColor);
+			product.setColor(color);
+			
+			new ProductService().save(product);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		
 		loadProducts();
 
 		return "";
 	}
 
-	private void add(String name, String description, Double price, Integer idColor, ArrayList<String> photo_path) {
-		Dao<Color> colorDao = FactoryDao.createColorDao();
-		Color color = colorDao.search(Color.class, idColor);
-		
-		
-		Product product = new Product();
-		product.setName(name);
-		product.setDescription(description);
-		product.setPrice(price);
-		product.setColor(color);
-		product.setPhotoList(photo_path);
-		
-		FactoryDao.createProductDao().insert(product);
-	}
-
-	private void change(Integer id, String name, String description, Double price, Integer idColor, ArrayList<String> photo_path) {
-		for (Product p : products) {
-			if (p.getId().equals(id)) {
-				Product product = new Product();
-				product.setId(id);
-				product.setName(name);
-				product.setDescription(description);
-				product.setPrice(price);
-				
-				Dao<Color> colorDao = FactoryDao.createColorDao();
-				Color color = colorDao.search(Color.class, idColor);
-				product.setColor(color);
-				
-				Product op = FactoryDao.createProductDao().search(Product.class, new Integer(id));
-				ArrayList<String> old_photoList = op.getPhotoList();
-				for(int i = 0; i < photo_path.size(); i++) {
-					if (!photo_path.get(i).isEmpty()) {
-						old_photoList.set(i, photo_path.get(i));
-					}
-				}
-				product.setPhotoList(old_photoList);
-				
-				FactoryDao.createProductDao().update(product);
-			}
-		}
-	}
-
 	public String remove(Product product) {
-		FactoryDao.createProductDao().remove(product);
+		try {
+			new ProductService().remove(product);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		loadProducts();
 		return "";
@@ -154,37 +111,48 @@ public class MBeanProduct {
 			html += "<script type=\"text/javascript\">";
 			html += "	window.location.replace(\"/"+base_url+"/index.jsf\");";
 			html += "</script>";
-		} else {
-			Product op = FactoryDao.createProductDao().search(Product.class, new Integer(id));
-			ArrayList<String> old_photoList = op.getPhotoList();
-			Integer index = 0;
-			
-			for (int i = 0; i < old_photoList.size()-1; i++) {
-				if (!old_photoList.get(i).isEmpty()) {
-					String image = "./ServletProductImage?id="+this.id+"&amp;image="+i;
-					if (index == 0) {
-						html += "<img id=\"full-photo\" src=\""+image+"\"></img>";
-						html += "<center><div>";
-						index++;
+		} else {			
+			try {
+				Product op =  new ProductService().search(this.id);
+				ArrayList<String> old_photoList = op.getPhotoList();
+				Integer index = 0;
+				
+				for (int i = 0; i < old_photoList.size()-1; i++) {
+					if (!old_photoList.get(i).isEmpty()) {
+						String image = "./ServletProductImage?id="+this.id+"&amp;image="+i;
+						if (index == 0) {
+							html += "<img id=\"full-photo\" src=\""+image+"\"></img>";
+							html += "<center><div>";
+							index++;
+						}
+						html += "<img src=\""+image+"\"";
+						html += "onclick=\"javascript:$('#full-photo').attr('src','"+image+"');\"";
+						html += "></img>";
 					}
-					html += "<img src=\""+image+"\"";
-					html += "onclick=\"javascript:$('#full-photo').attr('src','"+image+"');\"";
-					html += "></img>";
 				}
-			}
-			html += "</div></center>";
+				
+				if (index == 0) {
+					html += "<img id=\"full-photo\" src=\"./images/nophoto.jpg\"></img>";
+					html += "<center><div>";
+				}
+				
+				html += "</div></center>";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 			
-			
-			html += "";
-			html += "";
-			html += "";
 		}
 		
 		return html;
 	}
 	
 	public String getColorName() {		
-		return FactoryDao.createColorDao().search(Color.class, idColor).getName();
+		try {
+			return new ColorService().search(idColor).getName();
+		} catch (Exception e) {
+			System.err.println("Não foi possível encontrar a cor de id " + idColor);
+			return null;
+		}
 	}
 
 	public Integer getId() {

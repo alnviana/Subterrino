@@ -5,8 +5,9 @@ import java.util.List;
 import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 
-public class ColorService {
+public class ColorService implements GenericService<Color>{
 	
+	@Override
 	public void save(Color color) throws ServiceException {
 		if ((color.getId() == null || color.getId().equals(0)) && (color.getName() == null || color.getName() == "")) {
 			throw new ServiceException("O nome não pode ser nulo ou vazio.");
@@ -38,11 +39,18 @@ public class ColorService {
 		}		
 	}
 	
+	@Override
 	public void remove(Color color) throws ServiceException {		
 		FactoryDao.createColorDao().remove(color);	
 	}
 	
+	@Override
 	public List<Color> list() throws ServiceException {
 		return FactoryDao.createColorDao().list(Color.class);
+	}
+	
+	@Override
+	public Color search(Integer id) throws ServiceException {
+		return FactoryDao.createColorDao().search(Color.class, id);
 	}
 }

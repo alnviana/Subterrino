@@ -22,6 +22,10 @@
 					<b>Número:</b> <h:outputText value="#{purchase.add_num}" escape="false" /><br/>
 					<b>Tipo de Pagamento:</b> <h:outputText value="#{purchase.paymentType.name}" escape="false" /><br/>
 					
+					<h:commandLink action="#{mBeanPurchase.remove(purchase)}" styleClass="btn btn-danger">
+						Deletar
+					</h:commandLink>
+					
 					<table class="table table-bordered table-hover table-condensed">
 						<tbody>
 							<tr>
@@ -58,11 +62,6 @@
 										<div class="checkout-center-text">
 											R$ <h:outputText value="#{purchaseItem.getTotal()}" escape="false" />
 										</div>
-									</td>
-									<td>
-										<h:commandLink action="#{mBeanPurchase.remove(purchase)}" styleClass="btn btn-danger">
-											Deletar
-										</h:commandLink>
 									</td>
 								</tr>
 							</ui:repeat>
