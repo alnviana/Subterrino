@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.PaymentType;
 import com.subterrino.service.PaymentTypeService;
 
@@ -20,7 +19,11 @@ public class MBeanPaymentType {
 	
 	@PostConstruct
 	public void loadPaymentTypes() {
-		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
+		try {
+			paymentTypes = new PaymentTypeService().list();
+		} catch (Exception e) {
+			System.err.println("Não foi possível carregar a lista de tipos de pagamentos.");
+		}
 	}
 
 	public String save() throws IOException {

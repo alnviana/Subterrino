@@ -10,8 +10,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.catalina.core.ApplicationPart;
 
-import com.subterrino.dao.Dao;
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.Color;
 import com.subterrino.entity.Product;
 import com.subterrino.service.ColorService;
@@ -54,19 +52,18 @@ public class MBeanProduct {
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
-		
-		Product product = new Product();
-		product.setId(id);
-		product.setName(name);
-		product.setDescription(description);
-		product.setPrice(price);		
-		product.setPhotoList(photo_path);
-		
-		Dao<Color> colorDao = FactoryDao.createColorDao();
-		Color color = colorDao.search(Color.class, idColor);
-		product.setColor(color);
-		
+				
 		try {
+			Product product = new Product();
+			product.setId(id);
+			product.setName(name);
+			product.setDescription(description);
+			product.setPrice(price);		
+			product.setPhotoList(photo_path);
+			
+			Color color = new ColorService().search(idColor);
+			product.setColor(color);
+			
 			new ProductService().save(product);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,7 +85,7 @@ public class MBeanProduct {
 		return "";
 	}
 
-	private String load(Product product) {
+	public String load(Product product) {
 		this.id = product.getId();
 		this.name = product.getName();
 		this.description = product.getDescription();
@@ -150,7 +147,12 @@ public class MBeanProduct {
 	}
 	
 	public String getColorName() {		
-		return FactoryDao.createColorDao().search(Color.class, idColor).getName();
+		try {
+			return new ColorService().search(idColor).getName();
+		} catch (Exception e) {
+			System.err.println("Não foi possível encontrar a cor de id " + idColor);
+			return null;
+		}
 	}
 
 	public Integer getId() {

@@ -5,10 +5,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.Product;
 import com.subterrino.service.CartService;
+import com.subterrino.service.ProductService;
 import com.subterrino.service.ServiceException;
 
 @SessionScoped
@@ -37,7 +37,13 @@ public class MBeanCart {
 				ct = new CartItem(ct2.getProduct());
 				ct.setCount(ct2.getCount() + diff);
 			} catch (Exception e) {
-				Product p = FactoryDao.createProductDao().search(Product.class, id);
+				Product p;
+				
+				try {
+					p = new ProductService().search(id);
+				} catch (Exception e2) {
+					throw new ServiceException("Produto não encontrado.");
+				}
 				
 				if (p == null) {
 					throw new ServiceException("Produto não encontrado.");
@@ -60,7 +66,13 @@ public class MBeanCart {
 	
 	public String removeProduct(Integer id) {
 		try {
-			Product p = FactoryDao.createProductDao().search(Product.class, id);
+			Product p;
+			
+			try {
+				p = new ProductService().search(id);
+			} catch (Exception e2) {
+				throw new ServiceException("Produto não encontrado.");
+			}
 			
 			if (p == null) {
 				throw new ServiceException("Produto não encontrado.");
