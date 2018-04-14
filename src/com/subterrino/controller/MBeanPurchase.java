@@ -8,12 +8,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import com.subterrino.dao.Dao;
-import com.subterrino.dao.FactoryDao;
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.PaymentType;
 import com.subterrino.entity.Purchase;
 import com.subterrino.entity.PurchaseItem;
+import com.subterrino.service.PaymentTypeService;
+import com.subterrino.service.PurchaseService;
 
 @SessionScoped
 @ManagedBean(name = "mBeanPurchase")
@@ -30,9 +30,57 @@ public class MBeanPurchase {
 	private static List<PaymentType> paymentTypes = new ArrayList<PaymentType>();	
 	
 	@PostConstruct
-	public void loadPurchases() {
-		purchases = FactoryDao.createPurchaseDao().list(Purchase.class);
-		paymentTypes = FactoryDao.createPaymentTypeDao().list(PaymentType.class);
+	public void loadPurchases() {		
+		try {
+			purchases = new PurchaseService().list();
+		} catch (Exception e) {
+			System.err.println("Não foi possível carregar a lista de compras.");
+		}
+		
+		try {
+			paymentTypes = new PaymentTypeService().list();
+		} catch (Exception e) {
+			System.err.println("Não foi possível carregar a lista de tipos de pagamentos.");
+		}
+	}
+	
+	public String save() throws IOException {
+		Purchase purchase = new Purchase();
+		purchase.setName(name);
+		purchase.setAddress(address);
+		purchase.setAdd_num(add_num);
+		purchase.setPhone(phone);
+		
+		try {
+			PaymentType pt = new PaymentTypeService().search(paymentTypeID);
+			purchase.setPaymentType(pt);
+			
+			for (PurchaseItem pi : purchaseItems) {
+				pi.setPurchase(purchase);
+			}		
+			purchase.setPurchaseItems(purchaseItems);
+
+			new PurchaseService().save(purchase);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
+		ClearPurchase();
+		MBeanCart.ClearCart();
+		loadPurchases();
+
+		return "purchase_manager.jsf";
+	}
+	
+	public String remove(Purchase purchase) {
+		try {
+			new PurchaseService().remove(purchase);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		loadPurchases();
+		return "";
 	}
 	
 	public String showPurchase(ArrayList<CartItem> cart) {		
@@ -62,42 +110,13 @@ public class MBeanPurchase {
 		return totalPrice;
 	}
 
-	public String save() throws IOException {
-		Purchase purchase = new Purchase();
-		purchase.setName(name);
-		purchase.setAddress(address);
-		purchase.setAdd_num(add_num);
-		purchase.setPhone(phone);
-		
-		Dao<PaymentType> ptd = FactoryDao.createPaymentTypeDao();
-		PaymentType pt = ptd.search(PaymentType.class, paymentTypeID);
-		purchase.setPaymentType(pt);
-		
-		for (PurchaseItem pi : purchaseItems) {
-			pi.setPurchase(purchase);
-		}
-		
-		purchase.setPurchaseItems(purchaseItems);		
-		FactoryDao.createPurchaseDao().insert(purchase);
-		
+	private void ClearPurchase() {
 		name = null;
 		address = null;
 		add_num = null;
 		phone = null;
 		paymentTypeID = 0;
 		purchaseItems = new ArrayList<PurchaseItem>();
-		
-		MBeanCart.ClearCart();
-		loadPurchases();
-
-		return "purchase_manager.jsf";
-	}
-	
-	public String remove(Purchase purchase) {
-		FactoryDao.createPurchaseDao().remove(purchase);
-		
-		loadPurchases();
-		return "";
 	}
 
 	public Integer getId() {
