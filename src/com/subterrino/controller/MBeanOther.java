@@ -5,7 +5,7 @@ import javax.faces.context.FacesContext;
 
 @ManagedBean(name = "mBeanOther")
 public class MBeanOther {
-	public static String changeURL() {
+	public String changeURL() {
 		FacesContext fc = FacesContext.getCurrentInstance();		
 		String base_url = fc.getExternalContext().getContextName();
 		String next_page = fc.getViewRoot().getViewId();

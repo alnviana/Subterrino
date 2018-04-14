@@ -36,4 +36,8 @@
 
 * Suprimir aviso do restGET			[FEITO]
 
-* Para corrigir os Warnings do mBean: https://stackoverflow.com/questions/19139211/attribute-cannot-be-resolved-as-a-member-of-bean
+---
+
+* Para corrigir os Warnings do mBean:
+https://stackoverflow.com/questions/19139211/attribute-cannot-be-resolved-as-a-member-of-bean
+https://stackoverflow.com/a/8084049

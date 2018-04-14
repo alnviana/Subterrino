@@ -3,7 +3,6 @@ package com.subterrino.service;
 import java.util.List;
 
 import com.subterrino.dao.FactoryDao;
-import com.subterrino.entity.Color;
 import com.subterrino.entity.PaymentType;
 
 public class PaymentTypeService implements GenericService<PaymentType>{
