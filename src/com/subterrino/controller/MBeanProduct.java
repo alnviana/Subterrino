@@ -132,7 +132,12 @@ public class MBeanProduct {
 						html += "onclick=\"javascript:$('#full-photo').attr('src','"+image+"');\"";
 						html += "></img>";
 					}
-				}				
+				}
+				
+				if (index == 0) {
+					html += "<img id=\"full-photo\" src=\"./images/nophoto.jpg\"></img>";
+					html += "<center><div>";
+				}
 				
 				html += "</div></center>";
 			} catch (Exception e) {
