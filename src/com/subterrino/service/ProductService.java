@@ -16,6 +16,26 @@ public class ProductService implements GenericService<Product> {
 	@Override
 	public void save(Product product) throws ServiceException {
 		try {
+			if (product.getName() == null || product.getName().isEmpty()) {
+				throw new ServiceException("O produto deve possuir um nome.");
+			}
+			
+			if (product.getDescription() == null || product.getDescription().isEmpty()) {
+				throw new ServiceException("O produto deve possuir uma descrição.");
+			}
+			
+			if (!(product.getPrice() > 0)) {
+				throw new ServiceException("O produto deve possuir um preço.");
+			}
+			
+			if (product.getColor() == null) {
+				throw new ServiceException("O produto deve possuir uma cor.");
+			}
+			
+			if (! FactoryDao.createProductDao().search(Product.class, "name", product.getName()).isEmpty()) {
+				throw new ServiceException("Produto com este nome já cadastrado.");
+			}
+			
 			if (product.getId() == null || product.getId().equals(0)) {
 				product.setId(null);
 				FactoryDao.createProductDao().insert(product);
