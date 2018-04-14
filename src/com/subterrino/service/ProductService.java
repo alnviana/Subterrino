@@ -51,6 +51,7 @@ public class ProductService implements GenericService<Product> {
 		return FactoryDao.createProductDao().list(Product.class);
 	}
 	
+	@Override
 	public Product search(Integer id) throws ServiceException {
 		return FactoryDao.createProductDao().search(Product.class, id);
 	}

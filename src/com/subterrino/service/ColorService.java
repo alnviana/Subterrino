@@ -48,4 +48,9 @@ public class ColorService implements GenericService<Color>{
 	public List<Color> list() throws ServiceException {
 		return FactoryDao.createColorDao().list(Color.class);
 	}
+	
+	@Override
+	public Color search(Integer id) throws ServiceException {
+		return FactoryDao.createColorDao().search(Color.class, id);
+	}
 }

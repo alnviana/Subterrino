@@ -3,6 +3,7 @@ package com.subterrino.service;
 import java.util.List;
 
 import com.subterrino.dao.FactoryDao;
+import com.subterrino.entity.Color;
 import com.subterrino.entity.PaymentType;
 
 public class PaymentTypeService implements GenericService<PaymentType>{
@@ -49,5 +50,8 @@ public class PaymentTypeService implements GenericService<PaymentType>{
 		return FactoryDao.createPaymentTypeDao().list(PaymentType.class);
 	}
 
-
+	@Override
+	public PaymentType search(Integer id) throws ServiceException {
+		return FactoryDao.createPaymentTypeDao().search(PaymentType.class, id);
+	}
 }

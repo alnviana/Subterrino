@@ -46,6 +46,7 @@ public class CartService implements GenericService<CartItem>{
 		return cart;
 	}
 	
+	@Override
 	public CartItem search(Integer id) throws ServiceException {
 		for (int i = 0; i < cart.size(); i++) {
 			if (cart.get(i).getProduct().getId() == id) {
@@ -55,6 +56,7 @@ public class CartService implements GenericService<CartItem>{
 		
 		throw new ServiceException("Item não encontrado.");
 	}
+	
 	
 	public static void ClearCart() {
 		CartService.cart = new ArrayList<CartItem>();
