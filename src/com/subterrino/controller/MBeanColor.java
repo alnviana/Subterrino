@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
 import com.subterrino.entity.Color;
-import com.subterrino.service.ColorService;
 
 @ManagedBean(name = "mBeanColor")
 public class MBeanColor {
@@ -20,8 +19,7 @@ public class MBeanColor {
 	@PostConstruct
 	public void loadColors() {
 		try {
-			//colors = new RestClient<Color>().restGET("http://localhost:8080/Subterrino/rest/Color");
-			colors = new ColorService().list();
+			colors = new RestClient<Color>().request("http://localhost:8080/Subterrino/rest/Color", "GET", null, Color.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -33,7 +31,7 @@ public class MBeanColor {
 		c.setName(name);
 		
 		try {
-			new ColorService().save(c);
+			new RestClient<Color>().request("http://localhost:8080/Subterrino/rest/Color", "POST", c, Color.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,7 +43,7 @@ public class MBeanColor {
 
 	public String remove(Color color) throws IOException {		
 		try {
-			new ColorService().remove(color);
+			new RestClient<Color>().request("http://localhost:8080/Subterrino/rest/Color", "DELETE", color, Color.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
