@@ -32,8 +32,10 @@ public class ProductService implements GenericService<Product> {
 				throw new ServiceException("O produto deve possuir uma cor.");
 			}
 			
-			if (FactoryDao.createProductDao().search(Product.class, "name", product.getName()).get(0).getId() != product.getId()) {
-				throw new ServiceException("Produto com este nome já cadastrado.");
+			if (! FactoryDao.createProductDao().search(Product.class, "name", product.getName()).isEmpty()) {
+				if (FactoryDao.createProductDao().search(Product.class, "name", product.getName()).get(0).getId() != product.getId()) {
+					throw new ServiceException("Produto com este nome já cadastrado.");
+				}
 			}
 			
 			if (product.getId() == null || product.getId().equals(0)) {
