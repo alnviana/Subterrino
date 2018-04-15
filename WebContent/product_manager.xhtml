@@ -25,8 +25,7 @@
 			<label>Valor:</label>
 			<br />
 			<input type="text" jsf:id="price" jsf:value="#{mBeanProduct.price}">
-			<f:convertNumber type="currency" currencyCode="BRL"
-				currencySymbol="R$"></f:convertNumber>
+			<f:convertNumber type="currency" currencySymbol="R$ "></f:convertNumber>
 			</input>
 			<br />
 			<label>Cor:</label>
@@ -79,7 +78,7 @@
 		</h:form>
 
 		<script>
-			$("[id='product-form:price']").maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: true});
+			$("[id='product-form:price']").maskMoney({prefix:'R$ ', allowNegative: false, thousands:',', decimal:'.', affixesStay: true});
 		</script>
 
 	</ui:define>
