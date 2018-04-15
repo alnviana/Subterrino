@@ -36,6 +36,8 @@
 
 * Suprimir aviso do restGET			[FEITO]
 
+* Revisar e adicionar validações de máscara, tamanho de campos e tipo nos Services.
+
 ---
 
 * Para corrigir os Warnings do mBean:
