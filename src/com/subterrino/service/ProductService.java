@@ -32,7 +32,7 @@ public class ProductService implements GenericService<Product> {
 				throw new ServiceException("O produto deve possuir uma cor.");
 			}
 			
-			if (! FactoryDao.createProductDao().search(Product.class, "name", product.getName()).isEmpty()) {
+			if (FactoryDao.createProductDao().search(Product.class, "name", product.getName()).get(0).getId() != product.getId()) {
 				throw new ServiceException("Produto com este nome já cadastrado.");
 			}
 			
@@ -81,7 +81,7 @@ public class ProductService implements GenericService<Product> {
 		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 			imagesFolder = "C:/temp/images/";
 		} else {
-			imagesFolder = "/subterrino_images/";
+			imagesFolder = "/tmp/subterrino_images/";
 		}
 		
 		try {
