@@ -9,7 +9,7 @@ public class ColorService implements GenericService<Color>{
 	
 	@Override
 	public void save(Color color) throws ServiceException {
-		if (color.getName() == null || color.getName() == "") {
+		if (color.getName() == null || color.getName().isEmpty()) {
 			throw new ServiceException("O nome não pode ser nulo ou vazio.");
 		}
 		
