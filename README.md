@@ -24,17 +24,19 @@
 
 ---
 
-* Criar service para todos os MBeans
+* [FEITO] Criar service para todos os MBeans
 
-* Fazer os testes Alterar, Consultar e Deletar para o TestColor.
+* [FEITO] Fazer os testes Alterar, Consultar e Deletar para o TestColor.
 
 * Replicar os testes para os outros Dao.
 
 * Criar Facade
 
-* Criar RESTs para a interface.
+* [FEITO] Criar RESTs para a interface.
 
-* Suprimir aviso do restGET			[FEITO]
+* Corrigir Get do REST Purchase, entra em loop por causa do relacionamento OneToMany -> ManyToOne.
+
+* [FEITO] Suprimir aviso do restGET
 
 * Revisar e adicionar validações de máscara, tamanho de campos e tipo nos Services.
 
