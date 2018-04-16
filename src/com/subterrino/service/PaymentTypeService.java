@@ -9,7 +9,7 @@ public class PaymentTypeService implements GenericService<PaymentType>{
 
 	@Override
 	public void save(PaymentType paymentType) throws ServiceException {
-		if ((paymentType.getId() == null || paymentType.getId().equals(0)) && (paymentType.getName() == null || paymentType.getName() == "")) {
+		if (paymentType.getName() == null || paymentType.getName().isEmpty()) {
 			throw new ServiceException("O tipo de pagamento não pode ser nulo ou vazio.");
 		}
 		
