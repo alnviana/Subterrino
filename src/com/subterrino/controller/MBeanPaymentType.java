@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
 import com.subterrino.entity.PaymentType;
-import com.subterrino.service.PaymentTypeService;
 
 @ManagedBean(name = "mBeanPaymentType")
 public class MBeanPaymentType {
@@ -20,7 +19,7 @@ public class MBeanPaymentType {
 	@PostConstruct
 	public void loadPaymentTypes() {
 		try {
-			paymentTypes = new PaymentTypeService().list();
+			paymentTypes = new RestClient<PaymentType>().request("http://localhost:8080/Subterrino/rest/PaymentType", "GET", null, PaymentType.class);
 		} catch (Exception e) {
 			System.err.println("Não foi possível carregar a lista de tipos de pagamentos.");
 		}
@@ -32,7 +31,7 @@ public class MBeanPaymentType {
 		pt.setName(name);
 		
 		try {
-			new PaymentTypeService().save(pt);
+			new RestClient<PaymentType>().request("http://localhost:8080/Subterrino/rest/PaymentType", "POST", pt, PaymentType.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -44,7 +43,7 @@ public class MBeanPaymentType {
 
 	public String remove(PaymentType paymentType) {
 		try {
-			new PaymentTypeService().remove(paymentType);
+			new RestClient<PaymentType>().request("http://localhost:8080/Subterrino/rest/PaymentType", "DELETE", paymentType, PaymentType.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
