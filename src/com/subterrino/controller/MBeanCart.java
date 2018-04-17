@@ -7,8 +7,6 @@ import javax.faces.bean.SessionScoped;
 
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.Product;
-import com.subterrino.service.CartService;
-import com.subterrino.service.ProductService;
 import com.subterrino.service.ServiceException;
 
 @SessionScoped
@@ -25,63 +23,70 @@ public class MBeanCart {
 		return "";
 	}
 	
-	private void changeCartItemCount(Integer id, Integer diff) {
-		CartService cs = new CartService();
-		CartItem ct;
-		
-		try {
-			try {				
-				CartItem ct2 = cs.search(id);				
-				ct2 = cs.search(id);
-				
-				ct = new CartItem(ct2.getProduct());
-				ct.setCount(ct2.getCount() + diff);
-			} catch (Exception e) {
-				Product p;
-				
-				try {
-					p = new ProductService().search(id);
-				} catch (Exception e2) {
-					throw new ServiceException("Produto não encontrado.");
+	private void changeCartItemCount(Integer id, Integer diff) {		
+		try {			
+			CartItem originalCT = null;
+			List<CartItem> ctList = new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
+			for (CartItem item : ctList) {
+				if (item.getProduct().getId() == id) {
+					originalCT = item;
+					break;
 				}
-				
-				if (p == null) {
-					throw new ServiceException("Produto não encontrado.");
-				}
-				
-				ct = new CartItem(p);
-				ct.setCount(1);
 			}
 			
-			try {
+			if (originalCT != null) {
+				CartItem ct = new CartItem(originalCT.getProduct());
+				ct.setCount(originalCT.getCount() + diff);
 				
-				new CartService().save(ct);
-			} catch (Exception e) {
-				throw e;
-			}
+				try {
+					new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "POST", ct, CartItem.class);
+				} catch (Exception e) {
+					throw e;
+				}
+			} else {
+				Product p = null;
+				List<Product> pList = new RestClient<Product>().request("http://localhost:8080/Subterrino/rest/Product", "GET", null, Product.class);
+				for (Product item : pList) {
+					if (item.getId() == id) {
+						p = item;
+						break;
+					}
+				}
+				
+				if (p != null) {
+					CartItem ct = new CartItem(p);
+					ct.setCount(1);
+					
+					try {
+						new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "POST", ct, CartItem.class);
+					} catch (Exception e) {
+						throw e;
+					}
+				} else {
+					throw new ServiceException("Produto não encontrado.");
+				}
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public String removeProduct(Integer id) {
-		try {
-			Product p;
-			
-			try {
-				p = new ProductService().search(id);
-			} catch (Exception e2) {
-				throw new ServiceException("Produto não encontrado.");
+		try {			
+			CartItem ct = null;
+			List<CartItem> ctList = new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
+			for (CartItem item : ctList) {
+				if (item.getProduct().getId() == id) {
+					ct = item;
+					break;
+				}
 			}
 			
-			if (p == null) {
+			if (ct != null) {
+				new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "DELETE", ct, CartItem.class);
+			} else {
 				throw new ServiceException("Produto não encontrado.");
-			}
-			
-			CartItem ct = new CartItem(p);
-			ct.setCount(0);
-			
-			new CartService().remove(ct);
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,12 +95,12 @@ public class MBeanCart {
 	}
 	
 	public static void ClearCart() {
-		CartService.ClearCart();
+		new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "PUT", null, CartItem.class);
 	}
 
 	public List<CartItem> getCart() {
 		try {
-			return new CartService().list();
+			return new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
