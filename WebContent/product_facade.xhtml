@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="title">FACADE - Produtos</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="product-form" enctype="multipart/form-data">
+
+			<input type="hidden" jsf:id="id" jsf:value="#{mBeanProductFacade.id}"/>
+			<label>Nome do produto:</label>
+			<br />
+			<input type="text" jsf:id="name" jsf:value="#{mBeanProductFacade.name}"/>
+			<br />
+			<label>Descrição:</label>
+			<br />
+			<input type="text" jsf:id="description"
+				jsf:value="#{mBeanProductFacade.description}" />
+			<br />
+			<label>Valor:</label>
+			<br />
+			<input type="text" jsf:id="price" jsf:value="#{mBeanProductFacade.price}">
+			<f:convertNumber type="currency" currencyCode="BRL"
+				currencySymbol="R$"></f:convertNumber>
+			</input>
+			<br />
+			<label>Cor:</label>
+			<br />
+			<input type="text" jsf:id="color"
+				jsf:value="#{mBeanProductFacade.colorname}" />
+			
+			<input type="file" class="form-control" jsf:value="#{mBeanProductFacade.photoList[0]}" />
+			<input type="file" class="form-control" jsf:value="#{mBeanProductFacade.photoList[1]}" />
+			<input type="file" class="form-control" jsf:value="#{mBeanProductFacade.photoList[2]}" />
+
+			<h:commandLink action="#{mBeanProductFacade.save()}" styleClass="btn btn-success">
+				Salvar
+			</h:commandLink>
+
+		</h:form>
+
+		<script>
+			$("[id='product-form:price']").maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: true});
+		</script>
+
+	</ui:define>
+</ui:composition>
+
+</html>

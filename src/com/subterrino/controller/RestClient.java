@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class RestClient<T> {
 
@@ -27,6 +28,7 @@ public class RestClient<T> {
 				conn.setDoOutput(true);
 				
 				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 				String json = mapper.writeValueAsString(classObject);
 				
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
