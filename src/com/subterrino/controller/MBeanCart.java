@@ -7,6 +7,7 @@ import javax.faces.bean.SessionScoped;
 
 import com.subterrino.entity.CartItem;
 import com.subterrino.entity.Product;
+import com.subterrino.service.CartService;
 import com.subterrino.service.ServiceException;
 
 @SessionScoped
@@ -26,7 +27,7 @@ public class MBeanCart {
 	private void changeCartItemCount(Integer id, Integer diff) {		
 		try {			
 			CartItem originalCT = null;
-			List<CartItem> ctList = new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
+			List<CartItem> ctList = new CartService().list();
 			for (CartItem item : ctList) {
 				if (item.getProduct().getId() == id) {
 					originalCT = item;
@@ -74,7 +75,7 @@ public class MBeanCart {
 	public String removeProduct(Integer id) {
 		try {			
 			CartItem ct = null;
-			List<CartItem> ctList = new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
+			List<CartItem> ctList = new CartService().list();
 			for (CartItem item : ctList) {
 				if (item.getProduct().getId() == id) {
 					ct = item;
@@ -100,7 +101,7 @@ public class MBeanCart {
 
 	public List<CartItem> getCart() {
 		try {
-			return new RestClient<CartItem>().request("http://localhost:8080/Subterrino/rest/Cart", "GET", null, CartItem.class);
+			return new CartService().list();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
