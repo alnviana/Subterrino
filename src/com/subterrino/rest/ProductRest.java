@@ -6,9 +6,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.catalina.core.ApplicationPart;
 
 import com.subterrino.entity.Product;
 import com.subterrino.service.ProductService;
@@ -43,6 +46,16 @@ public class ProductRest {
 	public void remove(Product product) {
 		try {
 			new ProductService().remove(product);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void remove(ApplicationPart[] photoList) {
+		try {
+			ProductService.SavePhotoList(photoList);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}

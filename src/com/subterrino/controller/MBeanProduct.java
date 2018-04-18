@@ -12,9 +12,6 @@ import org.apache.catalina.core.ApplicationPart;
 
 import com.subterrino.entity.Color;
 import com.subterrino.entity.Product;
-import com.subterrino.service.ColorService;
-import com.subterrino.service.ProductService;
-import com.subterrino.service.ServiceException;
 
 @ManagedBean(name = "mBeanProduct")
 public class MBeanProduct {
@@ -33,13 +30,13 @@ public class MBeanProduct {
 	@PostConstruct
 	public void loadProducts() {
 		try {
-			products = new ProductService().list();
+			products = new RestClient<Product>().request("http://localhost:8080/Subterrino/rest/Product", "GET", null, Product.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		try {
-			colors = new ColorService().list();
+			colors = new RestClient<Color>().request("http://localhost:8080/Subterrino/rest/Color", "GET", null, Color.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -48,9 +45,9 @@ public class MBeanProduct {
 	public String save() throws IOException {
 		ArrayList<String> photo_path = new ArrayList<String>();
 		try {
-			photo_path = ProductService.SavePhotoList(photoList);
-		} catch (ServiceException e) {
-			e.printStackTrace();
+			photo_path = (ArrayList<String>) new RestClient<String>().request("http://localhost:8080/Subterrino/rest/Product", "PUT", null, String.class);
+		} catch (Exception e) {
+			System.err.println("Não foi possível salvar as fotos do produto.");
 		}
 				
 		try {
@@ -61,10 +58,21 @@ public class MBeanProduct {
 			product.setPrice(price);		
 			product.setPhotoList(photo_path);
 			
-			Color color = new ColorService().search(idColor);
+			Color color = new Color();
+			for (Color cl : colors) {
+				if (cl.getId() == idColor) {
+					color = cl;
+					break;
+				}
+			}
+			
 			product.setColor(color);
 			
-			new ProductService().save(product);
+			try {
+				new RestClient<Product>().request("http://localhost:8080/Subterrino/rest/Product", "POST", product, Product.class);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -76,7 +84,7 @@ public class MBeanProduct {
 
 	public String remove(Product product) {
 		try {
-			new ProductService().remove(product);
+			new RestClient<Product>().request("http://localhost:8080/Subterrino/rest/Product", "DELETE", product, Product.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -113,7 +121,15 @@ public class MBeanProduct {
 			html += "</script>";
 		} else {			
 			try {
-				Product op =  new ProductService().search(this.id);
+				Product op = new Product();
+				List<Product> pl = new RestClient<Product>().request("http://localhost:8080/Subterrino/rest/Product", "GET", null, Product.class);
+				for (Product pp : pl) {
+					if (pp.getId() == this.id) {
+						op = pp;
+						break;
+					}
+				}
+				
 				ArrayList<String> old_photoList = op.getPhotoList();
 				Integer index = 0;
 				
@@ -148,7 +164,16 @@ public class MBeanProduct {
 	
 	public String getColorName() {		
 		try {
-			return new ColorService().search(idColor).getName();
+			Color c = new Color();
+			List<Color> cl = new RestClient<Color>().request("http://localhost:8080/Subterrino/rest/Color", "GET", null, Color.class);
+			for (Color cc : cl) {
+				if (cc.getId() == idColor) {
+					c = cc;
+					break;
+				}
+			}
+			
+			return c.getName();
 		} catch (Exception e) {
 			System.err.println("Não foi possível encontrar a cor de id " + idColor);
 			return null;
